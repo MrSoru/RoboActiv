@@ -74,6 +74,7 @@ public class WindowsLog {
         }
         return WriteEvent(Message, entryType, ID);
     }
+
     public boolean WriteEvent(String Message, EntryType entryType, int ID) {
         String Command = "powershell -command " + TextManagement.DouleQuote("Write-EventLog -LogName " + this.LogName + " -EventID " + (
 

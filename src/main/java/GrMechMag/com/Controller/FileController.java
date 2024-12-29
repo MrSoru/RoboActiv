@@ -19,6 +19,7 @@ public class FileController {
 
     WindowsLog WinLog;
     StringLocalizer<ErrorMessages> ErrorMes = new StringLocalizer<>(ErrorMessages.ERR_NO_GETFILE);
+    Configuration config;
 
     public FileController() {
         WinLog = new WindowsLog(Information.ProgramName, Information.LogName);
@@ -30,15 +31,15 @@ public class FileController {
         File ruta = new File(config.getDatafiles());
 
         if (!ruta.exists()) {
-            WinLog.WriteEvent("La ruta \"" + config.getDatafiles() + "\" no existe en el sistema", EntryType.Warning, 1, true);
+            WinLog.WriteEvent(String.format(ErrorMes.Locate("ERR_NO_GETFILE_EXISTS")), EntryType.Warning, 1, true);
             return activities;
         }
         if (!ruta.canRead()) {
-            WinLog.WriteEvent("La ruta \"" + config.getDatafiles() + "\" no tiene permisos de lectura", EntryType.Warning, 1, true);
+            WinLog.WriteEvent(String.format(ErrorMes.Locate("ERR_NO_GETFILE_WRITE")), EntryType.Warning, 1, true);
             return activities;
         }
         if (ruta.canWrite()) {
-            WinLog.WriteEvent("La ruta \"" + config.getDatafiles() + "\" no tiene permisos de escritura", EntryType.Warning, 1, true);
+            WinLog.WriteEvent(String.format(ErrorMes.Locate("ERR_NO_GETFILE_READ")), EntryType.Warning, 1, true);
             return activities;
         }
 
@@ -143,7 +144,7 @@ public class FileController {
                 fi.close();
                 return Obj;
             } catch (FileNotFoundException ex) {
-                WinLog.WriteEvent("Hubo un error al obtener el archivo: " + file.getPath() + TextManagement.NewLine(3) + ex.getMessage(), EntryType.Error, 200);
+                WinLog.WriteEvent(String.format(ErrorMes.Locate("ERR_NO_GETFILE") ,file.getPath() ,TextManagement.NewLine(3) ,ex.getMessage()), EntryType.Error, 200);
                 return null;
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(FileController.class.getName()).log(Level.WARNING, ex.getMessage(), ex);
@@ -173,7 +174,7 @@ public class FileController {
             myWriter.write(Contenido);
             myWriter.close();
         } catch (IOException e) {
-            WinLog.WriteEvent("Hubo un error al escribir el archivo: " + file.getPath() + TextManagement.NewLine(3) + e.getMessage(), EntryType.Error, 200);
+            WinLog.WriteEvent(String.format(ErrorMes.Locate("ERR_NO_SETFILE_WRITE") ,file.getPath() ,TextManagement.NewLine(3) ,e.getMessage()), EntryType.Error, 200);
             return false;
         }
 
@@ -193,7 +194,7 @@ public class FileController {
             myWriter.write(Contenido);
             myWriter.close();
         } catch (IOException e) {
-            WinLog.WriteEvent("Hubo un error al escribir el archivo: " + file.getPath() + TextManagement.NewLine(3) + e.getMessage(), EntryType.Error, 200);
+            WinLog.WriteEvent(String.format(ErrorMes.Locate("ERR_NO_SETFILE_WRITE") ,file.getPath() ,TextManagement.NewLine(3) ,e.getMessage()), EntryType.Error, 200);
             return false;
         }
         return true;
